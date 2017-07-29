@@ -55,6 +55,24 @@ UserSchema.methods.generateAuthToken = function () {
   });
 };
 
+// 모델 메서드를 선언한다 => statics
+UserSchema.statics.findByToken = function(token) {
+  var User = this;
+  var decoded;
+
+  try {
+    decoded = jwt.verify(token, 'abc123');
+  } catch (e) {
+    return Promise.reject();
+  }
+
+  return User.findOne({
+    _id: decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  });
+};
+
 // 모델생성
 var User = mongoose.model('User', UserSchema);
 
