@@ -56,6 +56,16 @@ UserSchema.methods.generateAuthToken = function () {
   });
 };
 
+UserSchema.methods.removeToken = function (token) {
+  var user = this;
+
+  return user.update({
+    $pull: {
+      tokens: {token}
+    }
+  });
+};
+
 // 모델 메서드를 선언한다 => statics
 UserSchema.statics.findByToken = function(token) {
   var User = this;
